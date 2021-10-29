@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.0)
+
+project("SimpleInterpreter" VERSION 1.0.0)
+
+add_subdirectory(src)
+
+add_executable("${PROJECT_NAME}" main.cpp)
+
+add_definitions(-DAPP_NAME="${PROJECT_NAME} - ${PROJECT_VERSION}")
