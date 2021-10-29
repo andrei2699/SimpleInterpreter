@@ -1,5 +1,6 @@
 #include <iostream>
 #include "FileReader.hpp"
+#include "List.hpp"
 
 using namespace std;
 
@@ -39,4 +40,36 @@ int main(int argc, char **argv)
     reader.Close();
 
     return 0;
+}
+
+void test_list()
+{
+    int array[] = {10, 23, 32, 41, 51};
+    List<int> intlist(array, 5);
+    List<int> list = intlist;
+
+    for (int i = 0; i < list.Length(); i++)
+    {
+        cout << list[i] << ' ';
+    }
+    cout << endl;
+
+    list.RemoveAt(3);
+    for (int i = 0; i < list.Length(); i++)
+    {
+        cout << list[i] << ' ';
+    }
+    cout << endl;
+
+    list.Add(66);
+
+    list[0] = 534;
+
+    for (int i = 0; i < list.Length(); i++)
+    {
+        cout << list[i] << ' ';
+    }
+    cout << endl;
+
+    list.Clear();
 }
