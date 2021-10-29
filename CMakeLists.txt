@@ -6,4 +6,6 @@ add_subdirectory(src)
 
 add_executable("${PROJECT_NAME}" main.cpp)
 
+target_link_libraries("${PROJECT_NAME}" PRIVATE IO)
+
 add_definitions(-DAPP_NAME="${PROJECT_NAME} - ${PROJECT_VERSION}")
