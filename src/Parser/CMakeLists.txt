@@ -9,6 +9,12 @@ add_library(Parser
 
     src/Lexer.cpp
     src/Lexer.hpp
+
+    src/AST.cpp
+    src/AST.hpp
+
+    src/Parser.cpp
+    src/Parser.hpp
 )
 
 target_link_libraries(Parser PRIVATE List)

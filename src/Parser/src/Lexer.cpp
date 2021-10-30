@@ -62,7 +62,6 @@ List<IToken *> Lexer::Parse(char *line)
     {
         double value = strtod(temp, NULL);
 
-        std::cout << value << " ";
         list.Add(new NumericLiteralToken(value));
     }
 
