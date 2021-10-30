@@ -48,7 +48,6 @@ public:
 
     int Length()
     {
-
         return _currentIndex;
     }
 

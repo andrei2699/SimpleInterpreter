@@ -2,6 +2,9 @@
 #include "FileReader.hpp"
 #include "List.hpp"
 #include "Lexer.hpp"
+#include "Parser.hpp"
+#include "AST.hpp"
+#include "Runner.hpp"
 
 using namespace std;
 
@@ -33,15 +36,14 @@ int main(int argc, char **argv)
     }
 
     Lexer lexer;
+    Parser parser;
+    Runner runner;
     char line[100];
     while (reader.ReadLine(line, 100))
     {
         List<IToken *> list = lexer.Parse(line);
-        for (int i = 0; i < list.Length(); i++)
-        {
-            cout << list[i]->GetType() << ' ';
-        }
-        cout << endl;
+        AST *ast = parser.Parse(list);
+        runner.Run(ast);
 
         while (list.Length() > 0)
         {
