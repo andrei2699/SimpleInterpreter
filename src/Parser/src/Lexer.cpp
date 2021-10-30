@@ -1,0 +1,82 @@
+#include "Lexer.hpp"
+#include <cstring>
+#include <iostream>
+#include "Tokens/NumericLiteralToken.hpp"
+#include "Tokens/OperatorToken.hpp"
+
+Lexer::Lexer()
+{
+}
+
+Lexer::~Lexer()
+{
+}
+
+List<IToken *> Lexer::Parse(char *line)
+{
+    List<IToken *> list;
+
+    int len = strlen(line);
+
+    char *temp = new char[len + 1];
+    int tempIndex = 0;
+
+    int index = 0;
+    while (isspace(line[index]))
+    {
+        index++;
+    }
+
+    for (; index < len; index++)
+    {
+
+        if (isdigit(line[index]))
+        {
+            temp[tempIndex] = line[index];
+            tempIndex++;
+        }
+        else if (IsOperator(line[index]))
+        {
+            temp[tempIndex] = '\0';
+
+            if (tempIndex > 0)
+            {
+                double value = strtod(temp, NULL);
+
+                list.Add(new NumericLiteralToken(value));
+            }
+
+            list.Add(new OperatorToken(line[index]));
+
+            tempIndex = 0;
+        }
+        else if (isspace(line[index]))
+        {
+            continue;
+        }
+    }
+
+    temp[tempIndex] = '\0';
+
+    if (tempIndex > 0)
+    {
+        double value = strtod(temp, NULL);
+
+        std::cout << value << " ";
+        list.Add(new NumericLiteralToken(value));
+    }
+
+    delete[] temp;
+
+    return list;
+}
+
+bool Lexer::IsOperator(char *c)
+{
+    return strcmp(c, "+") == 0 || strcmp(c, "-") == 0 || strcmp(c, "*") == 0 || strcmp(c, "/") == 0;
+}
+
+bool Lexer::IsOperator(char c)
+{
+    return (c == '+') || (c == '-') || (c == '*') || (c == '/');
+}

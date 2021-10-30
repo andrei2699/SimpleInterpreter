@@ -1,6 +1,7 @@
 #include <iostream>
 #include "FileReader.hpp"
 #include "List.hpp"
+#include "Lexer.hpp"
 
 using namespace std;
 
@@ -31,10 +32,22 @@ int main(int argc, char **argv)
         return 2;
     }
 
+    Lexer lexer;
     char line[100];
     while (reader.ReadLine(line, 100))
     {
-        cout << line;
+        List<IToken *> list = lexer.Parse(line);
+        for (int i = 0; i < list.Length(); i++)
+        {
+            cout << list[i]->GetType() << ' ';
+        }
+        cout << endl;
+
+        while (list.Length() > 0)
+        {
+            IToken *token = list.RemoveAt(0);
+            delete token;
+        }
     }
 
     reader.Close();
