@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Tokens/NumericLiteralToken.hpp"
 #include "Tokens/OperatorToken.hpp"
+#include "Tokens/ParenthesisToken.hpp"
 
 Lexer::Lexer()
 {
@@ -29,7 +30,6 @@ List<IToken *> Lexer::Parse(char *line)
 
     for (; index < len; index++)
     {
-
         if (isdigit(line[index]))
         {
             temp[tempIndex] = line[index];
@@ -62,6 +62,23 @@ List<IToken *> Lexer::Parse(char *line)
             }
             continue;
         }
+        else if (IsParenthesis(line[index]))
+        {
+            temp[tempIndex] = '\0';
+
+            if (tempIndex > 0)
+            {
+                double value = strtod(temp, NULL);
+
+                list.Add(new NumericLiteralToken(value));
+            }
+
+            TokenType type = line[index] == '(' ? OPEN_PARENTHESIS : CLOSED_PARENTHESIS;
+
+            list.Add(new ParenthesisToken(type, line[index]));
+
+            tempIndex = 0;
+        }
     }
 
     temp[tempIndex] = '\0';
@@ -86,4 +103,9 @@ bool Lexer::IsOperator(char *c)
 bool Lexer::IsOperator(char c)
 {
     return (c == '+') || (c == '-') || (c == '*') || (c == '/');
+}
+
+bool Lexer::IsParenthesis(char c)
+{
+    return (c == '(') || (c == ')');
 }

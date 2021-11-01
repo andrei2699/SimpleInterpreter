@@ -5,7 +5,9 @@ enum TokenType
 {
     IDENTIFIER,
     OPERATOR,
-    LITERAL
+    LITERAL,
+    OPEN_PARENTHESIS,
+    CLOSED_PARENTHESIS
 };
 
 #endif // TOKENTYPE_H

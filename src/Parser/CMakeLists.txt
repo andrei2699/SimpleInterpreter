@@ -6,6 +6,9 @@ add_library(Parser
     src/Tokens/NumericLiteralToken.hpp
     src/Tokens/OperatorToken.cpp
     src/Tokens/OperatorToken.hpp
+    src/Tokens/ParenthesisToken.cpp
+    src/Tokens/ParenthesisToken.hpp
+
 
     src/Lexer.cpp
     src/Lexer.hpp

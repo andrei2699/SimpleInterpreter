@@ -15,6 +15,7 @@ public:
 private:
     bool IsOperator(char *c);
     bool IsOperator(char c);
+    bool IsParenthesis(char c);
 };
 
 #endif // LEXER_H

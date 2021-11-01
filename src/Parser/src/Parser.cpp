@@ -22,6 +22,7 @@ AST *Parser::Parse(List<IToken *> tokens)
 
     Stack<IToken *> stack;
     List<IToken *> outputlist;
+    int parenthesisCount = 0;
 
     for (int i = 0; i < tokens.Length(); i++)
     {
@@ -30,6 +31,24 @@ AST *Parser::Parse(List<IToken *> tokens)
         case LITERAL:
         {
             outputlist.Add(tokens[i]);
+        }
+        break;
+
+        case OPEN_PARENTHESIS:
+        {
+            parenthesisCount++;
+            stack.Push(tokens[i]);
+        }
+        break;
+
+        case CLOSED_PARENTHESIS:
+        {
+            parenthesisCount--;
+            while (!stack.IsEmpty() && stack.Top()->GetType() != OPEN_PARENTHESIS)
+            {
+                outputlist.Add(stack.Pop());
+            }
+            stack.Pop();
         }
         break;
 
@@ -46,6 +65,11 @@ AST *Parser::Parse(List<IToken *> tokens)
         default:
             break;
         }
+    }
+
+    if (parenthesisCount != 0)
+    {
+        throw new std::invalid_argument("Parsing error");
     }
 
     while (!stack.IsEmpty())
@@ -73,7 +97,7 @@ AST *Parser::Parse(List<IToken *> tokens)
             {
                 throw new std::invalid_argument("Parsing error");
             }
-            if (tokens[i - 1]->GetType() != LITERAL && tokens[i + 1]->GetType() != LITERAL)
+            if (tokens[i - 1]->GetType() == OPERATOR && tokens[i + 1]->GetType() == OPERATOR)
             {
                 throw new std::invalid_argument("Parsing error");
             }
