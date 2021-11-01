@@ -17,6 +17,6 @@ add_library(Parser
     src/Parser.hpp
 )
 
-target_link_libraries(Parser PRIVATE List)
+target_link_libraries(Parser PRIVATE List Stack)
 
 target_include_directories(Parser PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")

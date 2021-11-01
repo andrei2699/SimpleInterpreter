@@ -4,6 +4,7 @@
 #include "AST.hpp"
 #include "List.hpp"
 #include "Tokens/IToken.hpp"
+#include "Tokens/OperatorToken.hpp"
 
 class Parser
 {
@@ -14,9 +15,8 @@ public:
     AST *Parse(List<IToken *> tokens);
 
 private:
-    AST *Parse(List<IToken *> tokens, int index);
-    int IndexOfToken(List<IToken *> tokens, TokenType type, int startIndex = 0);
-    int IndexOfOperator(List<IToken *> tokens, char op, int startIndex = 0);
+    int Priority(OperatorToken *token);
+    AST *CovertListToAST(List<IToken *> tokens, int index, int *offset);
 };
 
 #endif // PARSER_H

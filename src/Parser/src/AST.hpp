@@ -10,12 +10,17 @@ public:
     AST(IToken *token);
     ~AST();
 
-    IToken *Token;
+    void Free();
+    int NodeCount();
     AST *Left;
     AST *Right;
 
+    IToken *Token;
+
 private:
     void Free(AST *ast);
+
+    int NodeCount(AST *ast);
 };
 
 #endif // AST_H

@@ -1,8 +1,9 @@
 #include "Parser.hpp"
-
+#include <iostream>
 #include <stdexcept>
 #include "Tokens/NumericLiteralToken.hpp"
 #include "Tokens/OperatorToken.hpp"
+#include "Stack.hpp"
 
 Parser::Parser()
 {
@@ -19,70 +20,122 @@ AST *Parser::Parse(List<IToken *> tokens)
         return nullptr;
     }
 
-    AST *ast = new AST();
+    Stack<IToken *> stack;
+    List<IToken *> outputlist;
 
-    int operatorIndex = IndexOfOperator(tokens, '*');
-    if (operatorIndex < 0)
+    for (int i = 0; i < tokens.Length(); i++)
     {
-        operatorIndex = IndexOfOperator(tokens, '/');
-    }
-    if (operatorIndex < 0)
-    {
-        operatorIndex = IndexOfOperator(tokens, '+');
-    }
-    if (operatorIndex < 0)
-    {
-        operatorIndex = IndexOfOperator(tokens, '-');
-    }
-    if (operatorIndex < 0)
-    {
-        if (tokens.Length() != 1)
+        switch (tokens[i]->GetType())
         {
-            throw new std::invalid_argument("Missing Operator");
+        case LITERAL:
+        {
+            outputlist.Add(tokens[i]);
         }
+        break;
 
-        ast->Token = tokens[0];
-        return ast;
-    }
-
-    ast->Token = tokens[operatorIndex];
-    ast->Left = new AST(tokens[operatorIndex - 1]);
-    ast->Right = new AST(tokens[operatorIndex + 1]);
-
-    return ast;
-}
-
-AST *Parser::Parse(List<IToken *> tokens, int index)
-{
-    return nullptr;
-}
-
-int Parser::IndexOfToken(List<IToken *> tokens, TokenType type, int startIndex)
-{
-    for (int i = startIndex; i < tokens.Length(); i++)
-    {
-        if (tokens[i]->GetType() == type)
+        case OPERATOR:
         {
-            return i;
+            while (!stack.IsEmpty() && Priority((OperatorToken *)stack.Top()) >= Priority((OperatorToken *)tokens[i]))
+            {
+                outputlist.Add(stack.Pop());
+            }
+            stack.Push(tokens[i]);
+        }
+        break;
+
+        default:
+            break;
         }
     }
 
-    return -1;
-}
+    while (!stack.IsEmpty())
+    {
+        outputlist.Add(stack.Pop());
+    }
 
-int Parser::IndexOfOperator(List<IToken *> tokens, char op, int startIndex)
-{
-    for (int i = startIndex; i < tokens.Length(); i++)
+    // for (int i = 0; i < outputlist.Length(); i++)
+    // {
+    //     if (outputlist[i]->GetType() == LITERAL)
+    //     {
+    //         std::cout << ((NumericLiteralToken *)outputlist[i])->GetValue() << " ";
+    //     }
+    //     else
+    //     {
+    //         std::cout << ((OperatorToken *)outputlist[i])->GetValue() << " ";
+    //     }
+    // }
+
+    for (int i = 0; i < tokens.Length(); i++)
     {
         if (tokens[i]->GetType() == OPERATOR)
         {
-            OperatorToken *operatorToken = (OperatorToken *)tokens[i];
-            if (operatorToken->GetValue() == op)
+            if (i - 1 < 0 || i + 1 >= tokens.Length())
             {
-                return i;
+                throw new std::invalid_argument("Parsing error");
+            }
+            if (tokens[i - 1]->GetType() != LITERAL && tokens[i + 1]->GetType() != LITERAL)
+            {
+                throw new std::invalid_argument("Parsing error");
             }
         }
     }
 
-    return -1;
+    int x = 0;
+    AST *ast = CovertListToAST(outputlist, outputlist.Length() - 1, &x);
+
+    if (ast->NodeCount() != outputlist.Length())
+    {
+        throw new std::invalid_argument("Parsing error");
+    }
+
+    return ast;
+}
+
+int Parser::Priority(OperatorToken *token)
+{
+    switch (token->GetValue())
+    {
+        //case '^': return 3;
+    case '*':
+    case '/':
+        return 2;
+    case '+':
+    case '-':
+        return 1;
+
+    default:
+        return 0;
+    }
+}
+
+AST *Parser::CovertListToAST(List<IToken *> tokens, int index, int *offset)
+{
+    AST *ast = new AST(tokens[index]);
+
+    (*offset)++;
+
+    if (tokens[index]->GetType() == LITERAL)
+    {
+        return ast;
+    }
+
+    if (index - 1 < 0)
+    {
+        throw new std::out_of_range("Missing Right Operand");
+    }
+
+    int rightOffset = 0;
+    ast->Right = CovertListToAST(tokens, index - 1, &rightOffset);
+
+    if (index - rightOffset - 1 < 0)
+    {
+        throw new std::out_of_range("Missing Left Operand");
+    }
+
+    int leftOffset = 0;
+    ast->Left = CovertListToAST(tokens, index - rightOffset - 1, &leftOffset);
+
+    *offset += leftOffset + rightOffset;
+
+    return ast;
 }

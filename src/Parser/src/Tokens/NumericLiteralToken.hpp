@@ -11,6 +11,8 @@ public:
 
     double GetValue();
 
+    void Print();
+
 private:
     double _value;
 };

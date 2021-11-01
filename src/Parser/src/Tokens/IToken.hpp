@@ -9,6 +9,8 @@ public:
     IToken(TokenType type);
     virtual ~IToken();
 
+    virtual void Print() = 0;
+
     TokenType GetType();
 
 private:

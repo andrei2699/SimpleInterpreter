@@ -1,4 +1,5 @@
 add_subdirectory(IO)
-add_subdirectory(Parser)
 add_subdirectory(List)
+add_subdirectory(Stack)
 add_subdirectory(Runner)
+add_subdirectory(Parser)

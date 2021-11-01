@@ -52,6 +52,14 @@ List<IToken *> Lexer::Parse(char *line)
         }
         else if (isspace(line[index]))
         {
+            if (tempIndex > 0)
+            {
+                temp[tempIndex] = '\0';
+                double value = strtod(temp, NULL);
+
+                list.Add(new NumericLiteralToken(value));
+                tempIndex = 0;
+            }
             continue;
         }
     }

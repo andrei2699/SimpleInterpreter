@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "FileReader.hpp"
 #include "List.hpp"
 #include "Lexer.hpp"
@@ -39,20 +40,37 @@ int main(int argc, char **argv)
     Parser parser;
     Runner runner;
     char line[100];
+    AST *ast;
     while (reader.ReadLine(line, 100))
     {
-        List<IToken *> list = lexer.Parse(line);
-        AST *ast = parser.Parse(list);
-        runner.Run(ast);
-
-        while (list.Length() > 0)
+        try
         {
-            IToken *token = list.RemoveAt(0);
-            delete token;
+            List<IToken *> list = lexer.Parse(line);
+            ast = parser.Parse(list);
+            // cout << line << "= ";
+            runner.Run(ast);
+
+            while (list.Length() > 0)
+            {
+                IToken *token = list.RemoveAt(0);
+                delete token;
+            }
         }
+        catch (...)
+        {
+            int len = strlen(line);
+            cout << "An exception occured while interpreting!" << endl;
+            cout << "Could not parse line " << line;
+            cout << endl;
+            // break;
+        }
+
+        // ast->Free();
     }
 
     reader.Close();
+
+    cout << endl;
 
     return 0;
 }

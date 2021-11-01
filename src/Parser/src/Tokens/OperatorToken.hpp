@@ -10,6 +10,7 @@ public:
     virtual ~OperatorToken();
 
     char GetValue();
+    void Print();
 
 private:
     char _op;
