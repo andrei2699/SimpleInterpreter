@@ -6,7 +6,7 @@
 class ParenthesisToken : public IToken
 {
 public:
-    ParenthesisToken(TokenType, char _parenthesis);
+    ParenthesisToken(TokenType type, char _parenthesis);
     virtual ~ParenthesisToken();
 
     char GetValue();
