@@ -10,6 +10,7 @@ public:
     AST(IToken *token);
     ~AST();
 
+    void Print();
     void Free();
     int NodeCount();
     AST *Left;
@@ -19,6 +20,7 @@ public:
 
 private:
     void Free(AST *ast);
+    void Print(AST *ast);
 
     int NodeCount(AST *ast);
 };

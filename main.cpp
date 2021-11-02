@@ -40,21 +40,16 @@ int main(int argc, char **argv)
     Parser parser;
     Runner runner;
     char line[100];
-    AST *ast;
     while (reader.ReadLine(line, 100))
     {
         try
         {
             List<IToken *> list = lexer.Parse(line);
-            ast = parser.Parse(list);
-            // cout << line << "= ";
-            runner.Run(ast);
 
-            while (list.Length() > 0)
-            {
-                IToken *token = list.RemoveAt(0);
-                delete token;
-            }
+            AST ast(*parser.Parse(list));
+            // ast.Print();
+            // cout << " = ";
+            runner.Run(&ast);
         }
         catch (...)
         {
@@ -62,10 +57,8 @@ int main(int argc, char **argv)
             cout << "An exception occured while interpreting!" << endl;
             cout << "Could not parse line " << line;
             cout << endl;
-            // break;
+            break;
         }
-
-        // ast->Free();
     }
 
     reader.Close();

@@ -1,6 +1,7 @@
 #include "AST.hpp"
 #include "Tokens/OperatorToken.hpp"
 #include "Tokens/NumericLiteralToken.hpp"
+#include <iostream>
 
 AST::AST() : Token(nullptr), Left(nullptr), Right(nullptr)
 {
@@ -13,6 +14,11 @@ AST::AST(IToken *token) : Token(token), Left(nullptr), Right(nullptr)
 AST::~AST()
 {
     Free();
+}
+
+void AST::Print()
+{
+    Print(this);
 }
 
 void AST::Free()
@@ -32,13 +38,10 @@ void AST::Free(AST *ast)
         return;
     }
 
+    delete ast->Token;
+
     Free(ast->Left);
     Free(ast->Right);
-
-    if (ast != this)
-    {
-        delete ast;
-    }
 }
 
 int AST::NodeCount(AST *ast)
@@ -49,4 +52,15 @@ int AST::NodeCount(AST *ast)
     }
 
     return 1 + NodeCount(ast->Left) + NodeCount(ast->Right);
+}
+
+void AST::Print(AST *ast)
+{
+    if (ast == nullptr)
+    {
+        return;
+    }
+    Print(ast->Left);
+    ast->Token->Print();
+    Print(ast->Right);
 }
