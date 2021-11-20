@@ -9,6 +9,11 @@ add_library(Parser
     src/Tokens/ParenthesisToken.cpp
     src/Tokens/ParenthesisToken.hpp
 
+    src/SyntaxNodes/ExpressionType.hpp
+    src/SyntaxNodes/Expression.cpp
+    src/SyntaxNodes/Expression.hpp
+    src/SyntaxNodes/StringExpression.cpp
+    src/SyntaxNodes/StringExpression.hpp
 
     src/Lexer.cpp
     src/Lexer.hpp

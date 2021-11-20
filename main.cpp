@@ -6,6 +6,8 @@
 #include "Parser.hpp"
 #include "AST.hpp"
 #include "Runner.hpp"
+#include "SyntaxNodes/Expression.hpp"
+#include "SyntaxNodes/StringExpression.hpp"
 
 using namespace std;
 
@@ -13,10 +15,18 @@ using namespace std;
 #define APP_NAME "SimpleInterpreter"
 #endif
 
+void test_list();
+void test_expression();
+
 int main(int argc, char **argv)
 {
     cout << APP_NAME << endl
          << endl;
+
+    test_expression();
+
+    return 0;
+
     if (argc != 2)
     {
         cout << "Usage " << argv[0] << " <path_to_file>" << endl;
@@ -98,4 +108,34 @@ void test_list()
     cout << endl;
 
     list.Clear();
+}
+
+void test_expression()
+{
+    StringExpression exp;
+    exp = "Value";
+
+    StringExpression ex1, ex2;
+
+    cout << exp.GetValue() << " | " << exp.GetType() << endl
+         << endl;
+
+    exp.SetType(NUMBER_EXPRESSION);
+
+    ex1 = ex2 = exp;
+
+    // ex2 = "val";
+
+    cout << exp.GetValue() << " | " << exp.GetType() << endl;
+    cout << ex1.GetValue() << " | " << ex1.GetType() << endl;
+    cout << ex2.GetValue() << " | " << ex2.GetType() << endl;
+
+    // self assignment
+    exp = exp;
+
+    ex1 = ex2 = exp = "Other";
+
+    cout << exp.GetValue() << " | " << exp.GetType() << endl;
+    cout << ex1.GetValue() << " | " << ex1.GetType() << endl;
+    cout << ex2.GetValue() << " | " << ex2.GetType() << endl;
 }
