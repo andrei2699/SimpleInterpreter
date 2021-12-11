@@ -1,0 +1,11 @@
+#ifndef EXPRESSION_TYPE_H
+#define EXPRESSION_TYPE_H
+
+enum ExpressionType
+{
+    NOT_SET,
+    STRING_EXPRESSION,
+    NUMBER_EXPRESSION,
+};
+
+#endif // EXPRESSION_TYPE_H
