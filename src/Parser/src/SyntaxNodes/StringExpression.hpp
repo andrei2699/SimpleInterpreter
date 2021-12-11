@@ -14,11 +14,11 @@ public:
     StringExpression &operator=(const char *value);
 
     char *GetValue();
+    void SetValue(char *value);
+    void SetValue(const char *value);
 
 private:
     char *value;
-
-    void SetValue(char *value);
 };
 
 #endif // STRING_EXPRESSION_H

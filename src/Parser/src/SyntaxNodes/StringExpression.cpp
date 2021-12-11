@@ -57,3 +57,8 @@ void StringExpression::SetValue(char *value)
 
     strcpy(this->value, value);
 }
+
+void StringExpression::SetValue(const char *value)
+{
+    SetValue((char *)value);
+}

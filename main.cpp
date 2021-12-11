@@ -18,11 +18,19 @@ using namespace std;
 
 void test_list();
 void test_expression();
+void test_unique();
+void test_shared();
 
 int main(int argc, char **argv)
 {
     cout << APP_NAME << endl
          << endl;
+
+    // test_unique();
+    // return 0;
+
+    test_shared();
+    return 0;
 
     if (argc != 2)
     {
@@ -53,10 +61,10 @@ int main(int argc, char **argv)
         {
             shared_ptr<List<IToken *>> list = lexer.Parse(line);
 
-            AST ast(*parser.Parse(list));
+            unique_ptr<AST> ast(parser.Parse(list));
             // ast.Print();
             // cout << " = ";
-            runner.Run(&ast);
+            runner.Run(ast.get());
         }
         catch (...)
         {
@@ -103,4 +111,41 @@ void test_expression()
     cout << exp.GetValue() << " | " << exp.GetType() << endl;
     cout << ex1.GetValue() << " | " << ex1.GetType() << endl;
     cout << ex2.GetValue() << " | " << ex2.GetType() << endl;
+}
+
+void test_unique()
+{
+    unique_ptr<StringExpression> ex1(new StringExpression());
+
+    ex1->SetValue("Val1");
+    cout << ex1.get()->GetValue() << endl;
+
+    // unique_ptr<StringExpression> ex2 = ex1;
+
+    unique_ptr<StringExpression> ex2 = move(ex1);
+    cout << ex1.get() << endl;
+    ex2->SetValue("V2");
+    cout << ex2.get()->GetValue() << endl;
+}
+
+void test_shared()
+{
+    shared_ptr<StringExpression> ex1(new StringExpression());
+
+    ex1->SetValue("Val1");
+    cout << ex1.get()->GetValue() << ' ' << ex1.use_count() << endl;
+
+    shared_ptr<StringExpression> ex2 = ex1;
+    cout << ex1.get()->GetValue() << ' ' << ex1.use_count() << endl;
+
+    {
+        shared_ptr<StringExpression> ex3(ex2);
+        cout << ex3.get()->GetValue() << ' ' << ex3.use_count() << endl;
+    }
+    ex2->SetValue("V2");
+    cout << ex2.get()->GetValue() << ' ' << ex2.use_count() << endl;
+
+    ex2->SetValue("Val3");
+    ex1.reset();
+    cout << ex1.get() << ' ' << ex2.get()->GetValue() << ' ' << ex1.use_count() << ' ' << ex2.use_count() << endl;
 }

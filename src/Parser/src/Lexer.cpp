@@ -15,7 +15,7 @@ Lexer::~Lexer()
 
 std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
 {
-    std::shared_ptr<List<IToken *>> list = std::make_unique<List<IToken *>>();
+    std::shared_ptr<List<IToken *>> list = std::make_shared<List<IToken *>>();
 
     int len = strlen(line);
 
