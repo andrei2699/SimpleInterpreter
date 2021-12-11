@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <memory>
 #include "AST.hpp"
 #include "List.hpp"
 #include "Tokens/IToken.hpp"
@@ -12,7 +13,7 @@ public:
     Parser();
     ~Parser();
 
-    AST *Parse(List<IToken *> tokens);
+    AST *Parse(std::shared_ptr<List<IToken *>> tokens);
 
 private:
     int Priority(OperatorToken *token);

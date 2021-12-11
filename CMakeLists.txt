@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project("SimpleInterpreter" VERSION 1.2.0)
+project("SimpleInterpreter" VERSION 1.3.0)
 
 add_subdirectory(src)
 

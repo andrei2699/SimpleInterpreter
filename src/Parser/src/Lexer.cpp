@@ -13,9 +13,9 @@ Lexer::~Lexer()
 {
 }
 
-List<IToken *> Lexer::Parse(char *line)
+std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
 {
-    List<IToken *> list;
+    std::shared_ptr<List<IToken *>> list = std::make_unique<List<IToken *>>();
 
     int len = strlen(line);
 
@@ -43,10 +43,10 @@ List<IToken *> Lexer::Parse(char *line)
             {
                 double value = strtod(temp, NULL);
 
-                list.Add(new NumericLiteralToken(value));
+                list->Add(new NumericLiteralToken(value));
             }
 
-            list.Add(new OperatorToken(line[index]));
+            list->Add(new OperatorToken(line[index]));
 
             tempIndex = 0;
         }
@@ -57,7 +57,7 @@ List<IToken *> Lexer::Parse(char *line)
                 temp[tempIndex] = '\0';
                 double value = strtod(temp, NULL);
 
-                list.Add(new NumericLiteralToken(value));
+                list->Add(new NumericLiteralToken(value));
                 tempIndex = 0;
             }
             continue;
@@ -70,12 +70,12 @@ List<IToken *> Lexer::Parse(char *line)
             {
                 double value = strtod(temp, NULL);
 
-                list.Add(new NumericLiteralToken(value));
+                list->Add(new NumericLiteralToken(value));
             }
 
             TokenType type = line[index] == '(' ? OPEN_PARENTHESIS : CLOSED_PARENTHESIS;
 
-            list.Add(new ParenthesisToken(type, line[index]));
+            list->Add(new ParenthesisToken(type, line[index]));
 
             tempIndex = 0;
         }
@@ -87,7 +87,7 @@ List<IToken *> Lexer::Parse(char *line)
     {
         double value = strtod(temp, NULL);
 
-        list.Add(new NumericLiteralToken(value));
+        list->Add(new NumericLiteralToken(value));
     }
 
     delete[] temp;

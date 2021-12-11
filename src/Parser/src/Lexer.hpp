@@ -1,6 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+#include <memory>
 #include "List.hpp"
 #include "Tokens/IToken.hpp"
 
@@ -10,7 +11,7 @@ public:
     Lexer();
     ~Lexer();
 
-    List<IToken *> Parse(char *line);
+    std::shared_ptr<List<IToken *>> Parse(char *line);
 
 private:
     bool IsOperator(char *c);

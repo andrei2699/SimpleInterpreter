@@ -13,9 +13,9 @@ Parser::~Parser()
 {
 }
 
-AST *Parser::Parse(List<IToken *> tokens)
+AST *Parser::Parse(std::shared_ptr<List<IToken *>> tokens)
 {
-    if (tokens.Length() == 0)
+    if (tokens->Length() == 0)
     {
         return nullptr;
     }
@@ -24,20 +24,20 @@ AST *Parser::Parse(List<IToken *> tokens)
     List<IToken *> outputlist;
     int parenthesisCount = 0;
 
-    for (int i = 0; i < tokens.Length(); i++)
+    for (int i = 0; i < tokens->Length(); i++)
     {
-        switch (tokens[i]->GetType())
+        switch (tokens->operator[](i)->GetType())
         {
         case LITERAL:
         {
-            outputlist.Add(tokens[i]);
+            outputlist.Add(tokens->operator[](i));
         }
         break;
 
         case OPEN_PARENTHESIS:
         {
             parenthesisCount++;
-            stack.Push(tokens[i]);
+            stack.Push(tokens->operator[](i));
         }
         break;
 
@@ -54,11 +54,11 @@ AST *Parser::Parse(List<IToken *> tokens)
 
         case OPERATOR:
         {
-            while (!stack.IsEmpty() && Priority((OperatorToken *)stack.Top()) >= Priority((OperatorToken *)tokens[i]))
+            while (!stack.IsEmpty() && Priority((OperatorToken *)stack.Top()) >= Priority((OperatorToken *)tokens->operator[](i)))
             {
                 outputlist.Add(stack.Pop());
             }
-            stack.Push(tokens[i]);
+            stack.Push(tokens->operator[](i));
         }
         break;
 
@@ -89,15 +89,15 @@ AST *Parser::Parse(List<IToken *> tokens)
     //     }
     // }
 
-    for (int i = 0; i < tokens.Length(); i++)
+    for (int i = 0; i < tokens->Length(); i++)
     {
-        if (tokens[i]->GetType() == OPERATOR)
+        if (tokens->operator[](i)->GetType() == OPERATOR)
         {
-            if (i - 1 < 0 || i + 1 >= tokens.Length())
+            if (i - 1 < 0 || i + 1 >= tokens->Length())
             {
                 throw new std::invalid_argument("Parsing error");
             }
-            if (tokens[i - 1]->GetType() == OPERATOR && tokens[i + 1]->GetType() == OPERATOR)
+            if (tokens->operator[](i - 1)->GetType() == OPERATOR && tokens->operator[](i + 1)->GetType() == OPERATOR)
             {
                 throw new std::invalid_argument("Parsing error");
             }
