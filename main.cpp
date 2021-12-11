@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <memory>
+#include <mutex>
 #include "FileReader.hpp"
 #include "List.hpp"
 #include "Lexer.hpp"
@@ -9,6 +10,7 @@
 #include "Runner.hpp"
 #include "SyntaxNodes/Expression.hpp"
 #include "SyntaxNodes/StringExpression.hpp"
+#include "Lock.hpp"
 
 using namespace std;
 
@@ -29,8 +31,8 @@ int main(int argc, char **argv)
     // test_unique();
     // return 0;
 
-    test_shared();
-    return 0;
+    // test_shared();
+    // return 0;
 
     if (argc != 2)
     {
@@ -51,6 +53,7 @@ int main(int argc, char **argv)
         return 2;
     }
 
+    mutex m;
     Lexer lexer;
     Parser parser;
     Runner runner;
@@ -59,7 +62,9 @@ int main(int argc, char **argv)
     {
         try
         {
-            shared_ptr<List<IToken *>> list = lexer.Parse(line);
+            Lock lock(&m);
+            shared_ptr<List<IToken *>>
+                list = lexer.Parse(line);
 
             unique_ptr<AST> ast(parser.Parse(list));
             // ast.Print();

@@ -19,7 +19,8 @@ std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
 
     int len = strlen(line);
 
-    char *temp = new char[len + 1];
+    std::unique_ptr<char[]> temp = std::make_unique<char[]>(len + 1);
+    // char *temp = new char[len + 1];
     int tempIndex = 0;
 
     int index = 0;
@@ -41,7 +42,8 @@ std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
 
             if (tempIndex > 0)
             {
-                double value = strtod(temp, NULL);
+                double value = strtod(temp.get(), NULL);
+                // double value = strtod(temp, NULL);
 
                 list->Add(new NumericLiteralToken(value));
             }
@@ -55,7 +57,8 @@ std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
             if (tempIndex > 0)
             {
                 temp[tempIndex] = '\0';
-                double value = strtod(temp, NULL);
+                double value = strtod(temp.get(), NULL);
+                // double value = strtod(temp, NULL);
 
                 list->Add(new NumericLiteralToken(value));
                 tempIndex = 0;
@@ -68,7 +71,8 @@ std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
 
             if (tempIndex > 0)
             {
-                double value = strtod(temp, NULL);
+                double value = strtod(temp.get(), NULL);
+                // double value = strtod(temp, NULL);
 
                 list->Add(new NumericLiteralToken(value));
             }
@@ -85,12 +89,13 @@ std::shared_ptr<List<IToken *>> Lexer::Parse(char *line)
 
     if (tempIndex > 0)
     {
-        double value = strtod(temp, NULL);
+        double value = strtod(temp.get(), NULL);
+        // double value = strtod(temp, NULL);
 
         list->Add(new NumericLiteralToken(value));
     }
 
-    delete[] temp;
+    // delete[] temp;
 
     return list;
 }
